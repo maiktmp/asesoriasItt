@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.user.ActivityListUser">
+        <activity android:name=".ui.user.ActivityLogin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,5 +24,6 @@
         <activity android:name=".ui.user.ActivityUserDetail" />
         <activity android:name=".ui.advisory.ActivityAdvisoryForm" />
         <activity android:name=".ui.user.UserFormActivity" />
+        <activity android:name=".ui.user.ActivityListUser" />
     </application>
 </manifest>

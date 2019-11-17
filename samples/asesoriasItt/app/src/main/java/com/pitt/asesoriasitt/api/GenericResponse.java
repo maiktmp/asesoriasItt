@@ -1,10 +1,10 @@
 package com.pitt.asesoriasitt.api;
 
-public class GenericResponse {
+public class GenericResponse<T> {
 
     private boolean success;
     private String error;
-    private Object data;
+    private T data;
 
     public boolean isSuccess() {
         return success;
@@ -22,11 +22,11 @@ public class GenericResponse {
         this.error = error;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

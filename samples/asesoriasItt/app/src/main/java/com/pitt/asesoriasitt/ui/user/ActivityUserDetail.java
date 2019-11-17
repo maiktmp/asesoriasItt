@@ -1,6 +1,7 @@
 package com.pitt.asesoriasitt.ui.user;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,11 +25,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.List;
 import java.util.Locale;
 
 public class ActivityUserDetail extends AppCompatActivity {
 
     public static String USER_ID_TAG = "USER_ID";
+    public static String IS_MAIN = "IS_MAIN";
 
     private UserProfileActivityBinding vBind;
     private UserInteractor userInteractor;
@@ -41,9 +44,13 @@ public class ActivityUserDetail extends AppCompatActivity {
         userInteractor = UserInteractor.getInstance();
         vBind = DataBindingUtil.setContentView(this, R.layout.user_profile_activity);
         userId = getIntent().getLongExtra(USER_ID_TAG, 0);
+        boolean isMain = getIntent().getBooleanExtra(IS_MAIN, false);
         setUpAppendBtn();
         setUpEditBtn();
-        setUpBackButton();
+        if (!isMain) {
+            setUpBackButton();
+        }
+
     }
 
     @Override

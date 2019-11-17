@@ -103,6 +103,14 @@ public class APIAsesorias {
         );
     }
 
+    public void login(User user, CBSuccess<GenericResponse<User>> cb) {
+        doRequest(
+                "Login user",
+                apiService.login(user),
+                cb
+        );
+    }
+
 
     @SuppressWarnings("unchecked")
     private void doRequest(final String operation, Call call, final CBSuccess cb) {

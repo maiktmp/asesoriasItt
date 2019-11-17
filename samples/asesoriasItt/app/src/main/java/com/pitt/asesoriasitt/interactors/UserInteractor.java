@@ -35,6 +35,20 @@ public class UserInteractor {
         });
     }
 
+    public void login(String username, String password, CBGeneric<GenericResponse<User>> cb) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+
+        api.login(user, ((success, result) -> {
+            if (!success) {
+                cb.onResult(null);
+                return;
+            }
+            cb.onResult(result);
+        }));
+    }
+
     public void getUserDetail(long userId, CBGeneric<User> cb) {
         api.getUserDetail(userId, ((success, result) -> {
             if (!success) {

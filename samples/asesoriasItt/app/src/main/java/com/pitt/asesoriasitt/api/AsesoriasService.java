@@ -25,5 +25,6 @@ public interface AsesoriasService {
     @POST(APIConstants.wsPath + "user/{userId}/update")
     Call<GenericResponse> updateUser(@Path("userId") long userId, @Body User user);
 
-
+    @POST(APIConstants.wsPath + "login")
+    Call<GenericResponse<User>> login(@Body User user);
 }
