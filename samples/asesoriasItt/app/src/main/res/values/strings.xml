@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">asesoriasItt</string>
+    <string name="start_hour">Hora de inicio</string>
+    <string name="end_hour">Hora de finalización</string>
+    <string name="advisory_name">Nombre de la asesoria</string>
+    <string name="save">Guardar</string>
+    <string name="user_name">Usuario</string>
+    <string name="nombre">Nombre</string>
+    <string name="carrier">Carrera</string>
+    <string name="contact">Contacto</string>
+    <string name="password">Contraseña</string>
+    <string name="place">Lugar</string>
+</resources>
