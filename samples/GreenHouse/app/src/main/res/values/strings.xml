@@ -2,5 +2,8 @@
     <string name="app_name">GreenHouse</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="fcm_message">Tienes una nueva notificación</string>
+    <string name="channel_name">GREENHOUSE_NOTIFICATION</string>
+    <string name="channel_description">GREENHOUSE_NOTIFICATION_DELEGATE_SYSTEM</string>
+    <string name="CHANEL_ID">400</string>
 
 </resources>

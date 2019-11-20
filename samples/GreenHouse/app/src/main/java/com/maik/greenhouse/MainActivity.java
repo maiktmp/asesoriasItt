@@ -14,16 +14,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.maik.greenhouse.BtUtils.AcceptThread;
+import com.maik.greenhouse.BtUtils.Notifications;
 import com.maik.greenhouse.FB.FBInteractors;
 import com.maik.greenhouse.databinding.MainBinding;
+import com.maik.greenhouse.models.GreenHouse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.Map;
 import java.util.Set;
 
 import io.reactivex.Single;
@@ -41,9 +48,15 @@ public class MainActivity extends AppCompatActivity {
     public static final int TRASNFER_DATA = 101;
     public static final int ACTION_REQUEST_ENABLE = 101;
     public Handler mHandler;
+    public Handler mHandlerTime;
     private boolean chekin = false;
     private StringBuilder dataReceived = new StringBuilder();
     private OutputStream outStream;
+    private String watterCode = "100";
+    private String motorCode = "101";
+    public static Boolean canNotify = true;
+    private GreenHouse greenHouse;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,21 +64,42 @@ public class MainActivity extends AppCompatActivity {
         vBind = DataBindingUtil.setContentView(this, R.layout.main);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         fbInteractors = FBInteractors.getInstance();
-        showGreenhouseImage();
+        setUpActionButton();
 
         /**
          * BT CONFIGURATIONS.
          */
 
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, ACTION_REQUEST_ENABLE);
-        } else {
-            connectBtw();
-        }
+//        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (!mBluetoothAdapter.isEnabled()) {
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableBtIntent, ACTION_REQUEST_ENABLE);
+//        } else {
+//            connectBtw();
+//        }
     }
 
+    private void sendNotification() {
+        if (!canNotify) return;
+        Notifications.createNotificationChannel(this);
+        Notifications.launchNotification(this);
+
+        Handler mHandlerTimer = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                MainActivity.canNotify = true;
+            }
+        };
+        canNotify = false;
+        mHandlerTimer.sendEmptyMessageDelayed(1, 2000);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showGreenhouseData();
+    }
 
     @SuppressLint({"CheckResult", "HandlerLeak"})
     private void connectBtw() {
@@ -127,26 +161,69 @@ public class MainActivity extends AppCompatActivity {
             if (dataReceived.length() > 2) {
                 String[] value = dataReceived.toString().split("°");
                 vBind.tvTemperature.setText(value[0] + "°");
+                if (Double.valueOf(value[0]) >= greenHouse.getLimit()) {
+                    sendNotification();
+                }
                 dataReceived = new StringBuilder();
             }
         }
     }
 
-    private void showGreenhouseImage() {
+    private void showGreenhouseData() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
         fbInteractors.getGreenHouse(greenHouse -> {
+            this.greenHouse = greenHouse;
             storageRef.child("imageService.jpg").getDownloadUrl().addOnSuccessListener(uri ->
                     Glide.with(this)
                             .load(uri)
                             .into(vBind.ivGreenhouse));
+
+            vBind.tvName.setText(greenHouse.getName());
+            vBind.tvDescription.setText(greenHouse.getDescription());
         });
 
     }
 
     private void onSuccessBt() {
-        sendData("500");
+//        sendData("500");
+        setUpWatterBtn();
+        setUpMotorsBtn();
+    }
+
+
+    /**
+     * 100 encender bombas
+     * 101 encender ventiladores
+     * 102 apagar bombas
+     * 103 apagar ventiladores
+     */
+
+    private void setUpWatterBtn() {
+        vBind.btnWatter.setOnClickListener(v -> {
+            if (watterCode.equals("102")) {
+                vBind.btnWatter.setText("Apagar bomba de agua");
+                watterCode = "100";
+            } else {
+                vBind.btnWatter.setText("Encender bomba de agua");
+                watterCode = "102";
+            }
+            sendData(watterCode);
+        });
+    }
+
+    private void setUpMotorsBtn() {
+        vBind.btnMotor.setOnClickListener(v -> {
+            if (motorCode.equals("103")) {
+                vBind.btnMotor.setText("Apagar ventiladores");
+                motorCode = "101";
+            } else {
+                vBind.btnMotor.setText("Encender ventiladores");
+                motorCode = "103";
+            }
+            sendData(motorCode);
+        });
     }
 
     private void sendData(String message) {
@@ -158,6 +235,58 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setUpActionButton() {
+        vBind.btnUpdate.setOnClickListener(v -> {
+            startActivity(new Intent(this, FormActivity.class));
+        });
+        vBind.tvAvg.setOnClickListener(v -> {
+            startActivity(new Intent(this, AverageActivity.class));
+        });
+        vBind.btnSync.setOnClickListener(v -> {
+            if (isOnline()) {
+
+                Map<String, String> avg = greenHouse.getAverage();
+                avg.put("20-11-2019", "25.6");
+
+                fbInteractors.update(greenHouse, success -> {
+                    if (success) {
+                        new MaterialAlertDialogBuilder(this)
+                                .setTitle("Éxito")
+                                .setMessage("Temperatura registrada")
+                                .setPositiveButton("Ok", null)
+                                .show();
+                    } else {
+                        new MaterialAlertDialogBuilder(this)
+                                .setTitle("Error")
+                                .setMessage("Intente más tarde")
+                                .setPositiveButton("Ok", null)
+                                .show();
+                    }
+                });
+
+            } else {
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Error")
+                        .setMessage("No se cuenta con acceso a internet, intente más tarde")
+                        .setPositiveButton("Ok", null)
+                        .show();
+            }
+        });
+
+    }
+
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
 
 

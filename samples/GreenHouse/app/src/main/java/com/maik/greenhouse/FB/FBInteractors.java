@@ -2,16 +2,16 @@ package com.maik.greenhouse.FB;
 
 import android.util.Log;
 
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.maik.greenhouse.Models.CBGeneric;
-import com.maik.greenhouse.Models.GreenHouse;
+import com.maik.greenhouse.models.GreenHouse;
+import com.maik.greenhouse.callbacks.CBGeneric;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 public class FBInteractors {
@@ -42,7 +42,11 @@ public class FBInteractors {
             GreenHouse greenHouse = new GreenHouse();
             greenHouse.setName((String) map.get("name"));
             greenHouse.setImg((ArrayList<String>) map.get("img"));
+            greenHouse.setDescription((String) map.get("description"));
+            greenHouse.setLimit((Long) map.get("limit"));
+            greenHouse.setAverage((Map) map.get("average"));
             cb.onResult(greenHouse);
+
         });
     }
 
@@ -62,6 +66,35 @@ public class FBInteractors {
                 Log.d(TAG, "get failed with ", task.getException());
             }
         });
+    }
+
+
+    public void update(GreenHouse greenHouse, CBGeneric<Boolean> cb) {
+        DocumentReference docRef = db
+                .collection(this.user)
+                .document(this.collection);
+        docRef.update(
+                "name", greenHouse.getName(),
+                "description", greenHouse.getDescription(),
+                "average", greenHouse.getAverage(),
+                "limit", greenHouse.getLimit())
+                .addOnSuccessListener(aVoid -> cb.onResult(true))
+                .addOnFailureListener(e -> cb.onResult(false));
+    }
+
+    public void updateImage(String name, byte[] bytes, CBGeneric<Boolean> cb) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        storageRef
+                .child(name)
+                .putBytes(bytes)
+                .addOnFailureListener(e -> {
+                    cb.onResult(false);
+                })
+                .addOnSuccessListener(taskSnapshot -> {
+                    cb.onResult(true);
+                });
+
     }
 
     //    public void getUriFile(String file, CBGeneric<String> cb) {
