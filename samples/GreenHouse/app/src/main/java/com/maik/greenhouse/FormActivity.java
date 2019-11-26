@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ public class FormActivity extends AppCompatActivity {
     private ActivityFormBinding vBind;
     private FBInteractors fbInteractors;
     private int RESULT_LOAD_IMG = 601;
+    private int RESULT_TAKE_IMG = 602;
     private GreenHouse greenHouse;
     private Bitmap selectedImage;
 
@@ -48,8 +50,13 @@ public class FormActivity extends AppCompatActivity {
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
 
-
-        if (resultCode == RESULT_OK) {
+        if (reqCode == RESULT_LOAD_IMG && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            selectedImage = imageBitmap;
+            vBind.ivPreview.setImageBitmap(imageBitmap);
+        }
+        if (resultCode == RESULT_OK && reqCode == RESULT_TAKE_IMG) {
             try {
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
@@ -83,7 +90,13 @@ public class FormActivity extends AppCompatActivity {
         vBind.btnChangeImage.setOnClickListener(v -> {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+            startActivityForResult(photoPickerIntent, RESULT_TAKE_IMG);
+        });
+        vBind.btnSelectImage.setOnClickListener(v -> {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, RESULT_LOAD_IMG);
+            }
         });
     }
 

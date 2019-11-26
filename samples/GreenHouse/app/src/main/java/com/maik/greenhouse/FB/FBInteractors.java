@@ -23,6 +23,7 @@ public class FBInteractors {
 
     private FirebaseFirestore db;
 
+
     public static FBInteractors getInstance() {
         instance = instance == null ? new FBInteractors() : instance;
         return instance;
@@ -30,6 +31,7 @@ public class FBInteractors {
 
     public FBInteractors() {
         db = FirebaseFirestore.getInstance();
+
     }
 
     public void getGreenHouse(CBGeneric<GreenHouse> cb) {

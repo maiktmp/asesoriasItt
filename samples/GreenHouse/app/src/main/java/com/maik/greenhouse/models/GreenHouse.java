@@ -1,5 +1,7 @@
 package com.maik.greenhouse.models;
 
+import android.util.ArrayMap;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -11,6 +13,8 @@ public class GreenHouse {
 
     private ArrayList<String> img;
     private Map<String, String> average;
+
+    private Map<String, String> municipios = new ArrayMap<>();
 
 
     public String getName() {

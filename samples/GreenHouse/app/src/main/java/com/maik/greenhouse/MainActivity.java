@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,10 +53,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean chekin = false;
     private StringBuilder dataReceived = new StringBuilder();
     private OutputStream outStream;
-    private String watterCode = "100";
-    private String motorCode = "101";
+    private String watterCode = "102";
+    private String motorCode = "103";
     public static Boolean canNotify = true;
     private GreenHouse greenHouse;
+
+    private ArrayList<Double> avgs = new ArrayList<>();
 
 
     @Override
@@ -70,13 +73,13 @@ public class MainActivity extends AppCompatActivity {
          * BT CONFIGURATIONS.
          */
 
-//        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//        if (!mBluetoothAdapter.isEnabled()) {
-//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableBtIntent, ACTION_REQUEST_ENABLE);
-//        } else {
-//            connectBtw();
-//        }
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, ACTION_REQUEST_ENABLE);
+        } else {
+            connectBtw();
+        }
     }
 
     private void sendNotification() {
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         canNotify = false;
-        mHandlerTimer.sendEmptyMessageDelayed(1, 2000);
+        mHandlerTimer.sendEmptyMessageDelayed(1, 5000);
     }
 
     @Override
@@ -161,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
             if (dataReceived.length() > 2) {
                 String[] value = dataReceived.toString().split("°");
                 vBind.tvTemperature.setText(value[0] + "°");
+                avgs.add(Double.valueOf(value[0]));
+
                 if (Double.valueOf(value[0]) >= greenHouse.getLimit()) {
                     sendNotification();
                 }
@@ -246,7 +251,15 @@ public class MainActivity extends AppCompatActivity {
             if (isOnline()) {
 
                 Map<String, String> avg = greenHouse.getAverage();
-                avg.put("20-11-2019", "25.6");
+                double _avg = 0.0;
+                for (Double aDouble : avgs) {
+                    _avg += aDouble;
+                }
+
+                _avg = _avg / avgs.size();
+
+                _avg = Math.round(_avg);
+                avg.put("20-11-2019", String.valueOf(_avg));
 
                 fbInteractors.update(greenHouse, success -> {
                     if (success) {
@@ -311,3 +324,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                 });
 * */
+
+
+
+
+

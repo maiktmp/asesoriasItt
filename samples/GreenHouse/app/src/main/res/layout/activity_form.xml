@@ -88,20 +88,39 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_change_image"
-                style="@style/Widget.MaterialComponents.Button"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="16dp"
-                android:text="Cambiar imagen" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_change_image"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="16dp"
+                    android:text="Seleccionar imágen" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_select_image"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="16dp"
+                    android:text="Tomar imágen" />
+
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/iv_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxHeight="200dp"
+                android:minHeight="100dp"
                 android:scaleType="centerCrop" />
 
 
