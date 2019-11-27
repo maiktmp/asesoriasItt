@@ -9,11 +9,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.pitt.asesoriasitt.R;
+import com.pitt.asesoriasitt.databinding.ActivityListAdvisoriesBinding;
 import com.pitt.asesoriasitt.databinding.ActivityLoginBinding;
 import com.pitt.asesoriasitt.db.models.Rol;
 import com.pitt.asesoriasitt.db.models.User;
 import com.pitt.asesoriasitt.interactors.UserInteractor;
 import com.pitt.asesoriasitt.ui.Dialogs;
+import com.pitt.asesoriasitt.ui.advisory.ActivityAdvisoryList;
 
 public class ActivityLogin extends AppCompatActivity {
 
@@ -26,7 +28,6 @@ public class ActivityLogin extends AppCompatActivity {
         vBind = DataBindingUtil.setContentView(this, R.layout.activity_login);
         userInteractor = UserInteractor.getInstance();
         setUpLoginBtn();
-        getSupportActionBar().hide();
     }
 
     private void setUpLoginBtn() {
@@ -58,7 +59,7 @@ public class ActivityLogin extends AppCompatActivity {
                             }
 
                             if (user.getFkIdRol() == Rol.STUDENT) {
-                                i = new Intent(this, ActivityUserDetail.class);
+                                i = new Intent(this, ActivityAdvisoryList.class);
                             }
                             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             finish();

@@ -25,5 +25,6 @@
         <activity android:name=".ui.advisory.ActivityAdvisoryForm" />
         <activity android:name=".ui.user.UserFormActivity" />
         <activity android:name=".ui.user.ActivityListUser" />
+        <activity android:name=".ui.advisory.ActivityAdvisoryList" />
     </application>
 </manifest>

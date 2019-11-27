@@ -54,8 +54,10 @@ public class UserFormActivity extends AppCompatActivity {
     }
 
     private void setUpBackButton() {
+        setSupportActionBar(vBind.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("");
     }
 
     private void setUpCarrier() {

@@ -112,6 +112,15 @@ public class APIAsesorias {
     }
 
 
+    public void getAdvisories(String query, CBSuccess<ArrayList<Advisory>> cb) {
+        doRequest(
+                "Get advisories",
+                apiService.getAdvisories(query),
+                cb
+        );
+    }
+
+
     @SuppressWarnings("unchecked")
     private void doRequest(final String operation, Call call, final CBSuccess cb) {
         call.enqueue(new Callback() {

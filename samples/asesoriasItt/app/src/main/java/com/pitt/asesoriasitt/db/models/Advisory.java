@@ -9,6 +9,7 @@ public class Advisory implements Serializable {
     private long id;
     private String name;
     private String description;
+    private User user;
     @SerializedName("place_name")
     private String placeName;
 
@@ -65,5 +66,11 @@ public class Advisory implements Serializable {
         this.fkIdUser = fkIdUser;
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

@@ -7,6 +7,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Detalles"
+                android:textColor="@color/grey"
+                android:textSize="20sp" />
+
+        </androidx.appcompat.widget.Toolbar>
+
         <ProgressBar
             android:id="@+id/pb_loading"
             android:layout_width="50dp"
@@ -14,7 +34,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_details"
@@ -25,7 +45,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             tools:visibility="visible">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,7 +139,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:orientation="vertical"
-                android:visibility="gone"
                 tools:visibility="visible" />
 
         </androidx.core.widget.NestedScrollView>

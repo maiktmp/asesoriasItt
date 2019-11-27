@@ -10,6 +10,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface AsesoriasService {
 
@@ -27,4 +28,8 @@ public interface AsesoriasService {
 
     @POST(APIConstants.wsPath + "login")
     Call<GenericResponse<User>> login(@Body User user);
+
+    @GET(APIConstants.wsPath + "advisories/search/")
+    Call<ArrayList<Advisory>> getAdvisories(@Query("query") String query);
+
 }

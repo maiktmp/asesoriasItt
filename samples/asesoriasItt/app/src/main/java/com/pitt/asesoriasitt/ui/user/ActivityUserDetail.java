@@ -1,7 +1,6 @@
 package com.pitt.asesoriasitt.ui.user;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,11 +20,9 @@ import com.pitt.asesoriasitt.interactors.UserInteractor;
 import com.pitt.asesoriasitt.ui.Codes;
 import com.pitt.asesoriasitt.ui.advisory.ActivityAdvisoryForm;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
-import java.util.List;
 import java.util.Locale;
 
 public class ActivityUserDetail extends AppCompatActivity {
@@ -66,8 +63,10 @@ public class ActivityUserDetail extends AppCompatActivity {
     }
 
     private void setUpBackButton() {
+        setSupportActionBar(vBind.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("");
     }
 
 
@@ -87,8 +86,8 @@ public class ActivityUserDetail extends AppCompatActivity {
         vBind.tvUserName.setText("Nombre: " + user.getFullName());
         vBind.tvUserCarrier.setText("Carrera: " + user.getCarrier().getName());
         vBind.tvUserUsername.setText("Usuario: " + user.getUsername());
-        vBind.tvUserUsername.setText("#Asesorías: " + String.valueOf(user.getAdvisories().size()));
-        vBind.tvUserUsername.setText("Contacto: \n " + user.getContact().getName());
+        vBind.tvUserAdvisoryCount.setText("#Asesorías: " + String.valueOf(user.getAdvisories().size()));
+        vBind.tvContact.setText("Contacto: \n " + user.getContact().getName());
 
 
         vBind.pbLoading.setVisibility(View.GONE);
@@ -133,9 +132,7 @@ public class ActivityUserDetail extends AppCompatActivity {
                 i.putExtra(ActivityAdvisoryForm.USER_ID, userId);
                 startActivityForResult(i, Codes.UPSERT_ADVISORY);
             });
-
             vBind.llAdvisory.addView(itemAdvisory);
-
         }
     }
 

@@ -79,4 +79,14 @@ public class UserInteractor {
         }));
     }
 
+    public void getAdvisrories(String query, CBGeneric<ArrayList<Advisory>> cb) {
+        api.getAdvisories(query, ((success, result) -> {
+            if (!success) {
+                cb.onResult(null);
+                return;
+            }
+            cb.onResult(result);
+        }));
+    }
+
 }
