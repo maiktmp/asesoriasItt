@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "613415253108",
+    "firebase_url": "https://ineproject-1f78f.firebaseio.com",
+    "project_id": "ineproject-1f78f",
+    "storage_bucket": "ineproject-1f78f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613415253108:android:98c6e2b84997bb168bcd21",
+        "android_client_info": {
+          "package_name": "com.tec.ine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613415253108-4aon22b60sm4j14b3amjou52he1ptpkr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgDDRYLEjjn8SsolKhkwI7Ai3oko-oAQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613415253108-4aon22b60sm4j14b3amjou52he1ptpkr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
